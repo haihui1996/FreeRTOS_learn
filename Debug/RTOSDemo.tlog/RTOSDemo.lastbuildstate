@@ -1,0 +1,2 @@
+#TargetFrameworkVersion=v4.0:PlatformToolSet=v142:EnableManagedIncrementalBuild=false:VCToolArchitecture=Native32Bit:WindowsTargetPlatformVersion=10.0
+Debug|Win32|E:\共享文件夹\FreeRTOS参考资料(源码、官方文档等)\FreeRTOS源码\FreeRTOSv9.0.0\FreeRTOS\Demo\WIN32-MSVC\|

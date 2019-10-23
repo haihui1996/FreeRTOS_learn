@@ -1,0 +1,9 @@
+﻿  main_blinky.c
+cl : 命令行 warning D9035: “Gm”选项已否决，并将在将来的版本中移除
+E:\共享文件夹\FreeRTOS参考资料(源码、官方文档等)\FreeRTOS源码\FreeRTOSv9.0.0\FreeRTOS\Demo\WIN32-MSVC\main_blinky.c(176,36): warning C4100: “taskdata”: 未引用的形参
+E:\共享文件夹\FreeRTOS参考资料(源码、官方文档等)\FreeRTOS源码\FreeRTOSv9.0.0\FreeRTOS\Demo\WIN32-MSVC\main_blinky.c(185,36): warning C4100: “taskdata”: 未引用的形参
+E:\共享文件夹\FreeRTOS参考资料(源码、官方文档等)\FreeRTOS源码\FreeRTOSv9.0.0\FreeRTOS\Demo\WIN32-MSVC\main_blinky.c(217,48): warning C4047: “函数”:“TaskFunction_t”与“TaskFunction_t *”的间接级别不同
+E:\共享文件夹\FreeRTOS参考资料(源码、官方文档等)\FreeRTOS源码\FreeRTOSv9.0.0\FreeRTOS\Demo\WIN32-MSVC\main_blinky.c(217,48): warning C4024: “xTaskCreate”: 形参和实参 1 的类型不同
+E:\共享文件夹\FreeRTOS参考资料(源码、官方文档等)\FreeRTOS源码\FreeRTOSv9.0.0\FreeRTOS\Demo\WIN32-MSVC\main_blinky.c(223,48): warning C4047: “函数”:“TaskFunction_t”与“TaskFunction_t *”的间接级别不同
+E:\共享文件夹\FreeRTOS参考资料(源码、官方文档等)\FreeRTOS源码\FreeRTOSv9.0.0\FreeRTOS\Demo\WIN32-MSVC\main_blinky.c(223,48): warning C4024: “xTaskCreate”: 形参和实参 1 的类型不同
+  WIN32.vcxproj -> E:\共享文件夹\FreeRTOS参考资料(源码、官方文档等)\FreeRTOS源码\FreeRTOSv9.0.0\FreeRTOS\Demo\WIN32-MSVC\.\Debug\RTOSDemo.exe
