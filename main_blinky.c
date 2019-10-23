@@ -173,25 +173,120 @@ static QueueHandle_t xQueue = NULL;
 static TimerHandle_t xTimer = NULL;
 
 /*-----------------------------------------------------------*/
+static TaskHandle_t handler1, handler2;
 static void Task_1_CreatTask(void* taskdata)
 {
+	unsigned int i;
+	(void)taskdata;
+
+	i = 0;
 	while (1)
 	{
+		i++;
 		printf("I am task 1\r\n");
-		//vTaskDelay(100);
+		if (i == 5) {
+			i = 0;
+			vTaskSuspend(NULL);
+		}
+		vTaskDelay(1000);
+
 	}
 	vTaskDelete(NULL);
 }
 static void Task_2_CreatTask(void* taskdata)
 {
+	unsigned int i;
+	(void)taskdata;
+
+	i = 0;
 	while (1)
 	{
+		i++;
 		printf("I am task 2\r\n");
-		//vTaskDelay(100);
+		if (i == 10)
+		{
+			i = 0;
+			vTaskResume(handler1);
+		}
+		vTaskDelay(1000);
 	}
 	vTaskDelete(NULL);
 }
 
+/*
+	链表操作
+*/
+static void Task_3_CreatTask(void* taskdata)
+{
+	/* 定义链表 */
+	List_t list_test;
+	/* 定义列表项 */
+	ListItem_t ListItem1, ListItem2, ListItem3, ListItem4;
+
+	(void)taskdata;
+	/* 初始化列表 */
+	vListInitialise(&list_test);
+
+	/* 初始化列表项 */
+	vListInitialiseItem(&ListItem1);
+	vListInitialiseItem(&ListItem2);
+	vListInitialiseItem(&ListItem3);
+	vListInitialiseItem(&ListItem4);
+
+	/* 列表项赋值 */
+	ListItem1.xItemValue = 100;
+	ListItem2.xItemValue = 200;
+	ListItem3.xItemValue = 300;
+	ListItem4.xItemValue = 400;
+
+	//printf("ListItem1:%#x\r\n", (int)&ListItem1);
+	//printf("ListItem2:%#x\r\n", (int)&ListItem2);
+	//printf("ListItem3:%#x\r\n", (int)&ListItem3);
+
+	/* 无论按什么顺序插入，最终的排列都是按照ItemValue由小到大 */
+	vListInsert(&list_test, &ListItem3);
+	vListInsert(&list_test, &ListItem1);
+	vListInsert(&list_test, &ListItem4);
+	//vListInsert(&list_test, &ListItem2);
+
+	printf("list1:%d\r\n", (list_test.xListEnd.pxNext->xItemValue));
+	printf("list2:%d\r\n", (list_test.xListEnd.pxNext->pxNext->xItemValue));
+	printf("list3:%d\r\n", (list_test.xListEnd.pxNext->pxNext->pxNext->xItemValue));
+	//printf("list4:%d\r\n", (list_test.xListEnd.pxNext->pxNext->pxNext->pxNext->xItemValue));
+
+#if 0
+	uxListRemove(&ListItem3);
+	printf("***********************************\r\n");
+	printf("list1:%d\r\n", (list_test.xListEnd.pxNext->xItemValue));
+	printf("list2:%d\r\n", (list_test.xListEnd.pxNext->pxNext->xItemValue));
+	printf("list3:%d\r\n", (list_test.xListEnd.pxNext->pxNext->pxNext->xItemValue));
+	printf("list4:%d\r\n", (list_test.xListEnd.pxNext->pxNext->pxNext->pxNext->xItemValue));
+#endif
+	/*
+		vListInsertEnd()将Item加在pxIndex当前指向的列表项之前
+	*/
+	printf("***********************************\r\n");
+	printf("PIdx:%ld\n", list_test.pxIndex->xItemValue);
+	list_test.pxIndex = list_test.pxIndex->pxNext;
+	vListInsertEnd(&list_test, &ListItem2);
+	printf("list1:%d\r\n", (list_test.xListEnd.pxNext->xItemValue));
+	printf("list2:%d\r\n", (list_test.xListEnd.pxNext->pxNext->xItemValue));
+	printf("list3:%d\r\n", (list_test.xListEnd.pxNext->pxNext->pxNext->xItemValue));
+	printf("list4:%d\r\n", (list_test.xListEnd.pxNext->pxNext->pxNext->pxNext->xItemValue));
+	
+	uxListRemove(&ListItem2);
+	printf("***********************************\r\n");
+	list_test.pxIndex = list_test.pxIndex->pxNext;
+	vListInsertEnd(&list_test, &ListItem2);
+	printf("list1:%d\r\n", (list_test.xListEnd.pxNext->xItemValue));
+	printf("list2:%d\r\n", (list_test.xListEnd.pxNext->pxNext->xItemValue));
+	printf("list3:%d\r\n", (list_test.xListEnd.pxNext->pxNext->pxNext->xItemValue));
+	printf("list4:%d\r\n", (list_test.xListEnd.pxNext->pxNext->pxNext->pxNext->xItemValue));
+	//printf("list4:%d\r\n", (list_test.xListEnd.pxNext->pxNext->pxNext->pxNext->pxNext->xItemValue));
+	
+	while (1);
+
+}
 /*** SEE THE COMMENTS AT THE TOP OF THIS FILE ***/
 void main_blinky( void )
 {
@@ -214,17 +309,24 @@ const TickType_t xTimerPeriod = mainTIMER_SEND_FREQUENCY_MS;
 
 		xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 #else
-		xTaskCreate((TaskFunction_t*)Task_1_CreatTask,
-			"task_1",
+		//xTaskCreate((TaskFunction_t*)Task_1_CreatTask,
+		//	"task_1",
+		//	configMINIMAL_STACK_SIZE,
+		//	NULL,
+		//	1,
+		//	&handler1);
+
+		//xTaskCreate((TaskFunction_t*)Task_2_CreatTask,
+		//	"task_2",
+		//	configMINIMAL_STACK_SIZE,
+		//	NULL,
+		//	1,
+		//	&handler2);
+		xTaskCreate((TaskFunction_t*)Task_3_CreatTask,
+			"task_3",
 			configMINIMAL_STACK_SIZE,
 			NULL,
 			1,
-			NULL);
-		xTaskCreate((TaskFunction_t*)Task_2_CreatTask,
-			"task_2",
-			configMINIMAL_STACK_SIZE,
-			NULL,
-			10,
 			NULL);
 #endif
 		/* Create the software timer, but don't start it yet. */
