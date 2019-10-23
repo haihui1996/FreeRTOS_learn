@@ -196,6 +196,7 @@ static void Task_1_CreatTask(void* taskdata)
 static void Task_2_CreatTask(void* taskdata)
 {
 	unsigned int i;
+	UBaseType_t pri1, pri2;
 	(void)taskdata;
 
 	i = 0;
@@ -206,7 +207,12 @@ static void Task_2_CreatTask(void* taskdata)
 		if (i == 10)
 		{
 			i = 0;
+			/* 获取任务优先级  */
+			pri1 = uxTaskPriorityGet(handler1);
+			pri2 = uxTaskPriorityGet(handler2);
+			printf("%d-%d\r\n", pri1, pri2);
 			vTaskResume(handler1);
+			//vTaskDelete(NULL);
 		}
 		vTaskDelay(1000);
 	}
@@ -309,25 +315,25 @@ const TickType_t xTimerPeriod = mainTIMER_SEND_FREQUENCY_MS;
 
 		xTaskCreate( prvQueueSendTask, "TX", configMINIMAL_STACK_SIZE, NULL, mainQUEUE_SEND_TASK_PRIORITY, NULL );
 #else
-		//xTaskCreate((TaskFunction_t*)Task_1_CreatTask,
-		//	"task_1",
-		//	configMINIMAL_STACK_SIZE,
-		//	NULL,
-		//	1,
-		//	&handler1);
-
-		//xTaskCreate((TaskFunction_t*)Task_2_CreatTask,
-		//	"task_2",
-		//	configMINIMAL_STACK_SIZE,
-		//	NULL,
-		//	1,
-		//	&handler2);
-		xTaskCreate((TaskFunction_t*)Task_3_CreatTask,
-			"task_3",
+		xTaskCreate((TaskFunction_t*)Task_1_CreatTask,
+			"task_1",
 			configMINIMAL_STACK_SIZE,
 			NULL,
 			1,
-			NULL);
+			&handler1);
+
+		xTaskCreate((TaskFunction_t*)Task_2_CreatTask,
+			"task_2",
+			configMINIMAL_STACK_SIZE,
+			NULL,
+			2,
+			&handler2);
+		//xTaskCreate((TaskFunction_t*)Task_3_CreatTask,
+		//	"task_3",
+		//	configMINIMAL_STACK_SIZE,
+		//	NULL,
+		//	1,
+		//	NULL);
 #endif
 		/* Create the software timer, but don't start it yet. */
 		xTimer = xTimerCreate( "Timer",				/* The text name assigned to the software timer - for debug only as it is not used by the kernel. */
